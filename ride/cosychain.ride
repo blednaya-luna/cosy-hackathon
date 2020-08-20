@@ -1,0 +1,141 @@
+{-# STDLIB_VERSION 3 #-}
+{-# CONTENT_TYPE DAPP #-}
+{-# SCRIPT_TYPE ACCOUNT #-}
+
+let OWNER = base58'13YevTfaVEoXJ5hu2kSjqnp2j2E8RV3NHHFM6giCFssY'
+
+func getNumberByKey(key: String) = {
+    let number = match this.getInteger(key) {
+        case a:Int => a
+        case _ => 0
+    }
+    number
+}
+
+let NONE = "none"
+func getStringByKey(key: String) = {
+    let string = match this.getString(key) {
+        case a:String => a
+        case _ => NONE
+    }
+    string
+}
+
+func getItemKey(supplier: String, title: String) = {
+    let itemId = supplier + title
+    "item_" + itemId.toBytes().toBase58String()
+}
+
+func getItemOwnerKey(item: String) = {
+    item + "_owner"
+}
+func getItemOwnerValue(item: String) = {
+    getStringByKey(getItemOwnerKey(item))
+}
+
+func getItemPriceKey(item: String) = {
+    item + "_price"
+}
+func getItemPriceValue(item: String) = {
+    getNumberByKey(getItemPriceKey(item))
+}
+
+func getItemDataKey(item: String) = {
+    item + "_data"
+}
+func getItemDataValue(item: String) = {
+    getStringByKey(getItemDataKey(item))
+}
+
+func getAccountBalanceKey(account: String) = {
+    "account_" + account + "_balance"
+}
+func getAccountBalanceValue(account: String) = {
+    getNumberByKey(getAccountBalanceKey(account))
+}
+
+func getPurchasePriceKey(item: String, customer: String) = {
+    "purchase_" + item + "_customer_" + customer + "_price"
+}
+
+@Verifier(tx)
+func verify() = {
+    match tx {
+        case a:SetScriptTransaction => sigVerify(tx.bodyBytes, tx.proofs[0], OWNER)
+        case b:DataTransaction => true
+        case _ => false
+    }
+}
+
+@Callable(inv)
+func deposit() = {
+    let payment = inv.payment.extract()
+    if (payment.assetId.isDefined()) then {
+        throw("you can only use WAVES at the moment")
+    } else {
+        let accountAddress = inv.caller.bytes.toBase58String()
+        let currentAmount = getAccountBalanceValue(accountAddress)
+        let newAmount = currentAmount + payment.amount
+        WriteSet([
+            DataEntry(accountAddress, newAmount)
+        ])
+    }
+}
+
+@Callable(inv)
+func addItem(title: String, price: Int, data: String) = {
+    let supplierAddress = inv.caller.bytes.toBase58String()
+    let item = getItemKey(supplierAddress, title)
+    if (price <= 0) then {
+        throw("purchase amount cannot be less that item price")
+    } else if (NONE != getItemOwnerValue(item)) then {
+        throw("an item is alreadt exist")
+    } else {
+        WriteSet([
+            DataEntry(getItemOwnerKey(item), supplierAddress),
+            DataEntry(getItemPriceKey(item), price),
+            DataEntry(getItemDataKey(item), data)
+        ])
+    }
+}
+
+@Callable(inv)
+func purchase(item: String) = {
+    let payment = inv.payment.extract()
+    if (payment.assetId.isDefined()) then {
+        throw("you can only use WAVES at the moment")
+    } else {
+        let customerAddress = inv.caller.bytes.toBase58String()
+        let price = getItemPriceValue(item)
+        if (payment.amount < price) then {
+            throw("purchase amount cannot be less that item price")
+        } else if (payment.amount > price) then {
+            throw("purchase amount cannot be higher that item price")
+        } else {
+            WriteSet([
+                DataEntry(getPurchasePriceKey(item, customerAddress), price)
+            ])
+        }
+    }
+}
+
+@Callable(inv)
+func withdraw(amount: Int) = {
+    let accountAddress = inv.caller.bytes.toBase58String()
+    let currentAmount = getAccountBalanceValue(accountAddress)
+    let newAmount = currentAmount - amount
+    if (amount < 0) then {
+        throw("cannot withdraw negative amount")
+    } else if (newAmount < 0) then {
+        throw("not enough balance")
+    } else {
+        ScriptResult(
+            WriteSet([
+                DataEntry(getAccountBalanceKey(accountAddress), newAmount)
+            ]),
+            TransferSet([
+                ScriptTransfer(inv.caller, amount, unit)
+            ])
+        )
+    }
+}
