@@ -1,6 +1,6 @@
 import { DAPP } from 'globalConstants';
 
-export const prepareAddItemTxData = (title, price, data) => ({
+export const prepareAddItemTxData = ({ id, price, data }) => ({
   type: 16,
   data: {
     fee: {
@@ -13,7 +13,7 @@ export const prepareAddItemTxData = (title, price, data) => ({
       args: [
         {
           type: 'string',
-          value: title,
+          value: id,
         },
         {
           type: 'integer',
@@ -21,10 +21,7 @@ export const prepareAddItemTxData = (title, price, data) => ({
         },
         {
           type: 'string',
-          value: JSON.stringify({
-            title,
-            description: data,
-          }),
+          value: JSON.stringify(data),
         },
       ],
     },

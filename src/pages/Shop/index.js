@@ -1,29 +1,36 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
-import { v4 } from 'uuid';
 import { AppLayout } from 'components/AppLayout';
 import { Item } from 'pages/Shop/Item';
 import { DAPP } from 'globalConstants';
 import { log, LOG_TYPE } from 'utils/log';
-
-const mock = Array.from({ length: 15 }, () => v4());
+import { parseItemsResponse } from 'pages/Shop/utils/parseItemsResponse';
+import { useStyles } from 'pages/Shop/styles';
 
 export const Shop = () => {
+  const classes = useStyles();
+
+  const [items, setItems] = useState([]);
+
   useEffect(() => {
     fetch(`https://testnet1.wavesnodes.com/addresses/data/${DAPP}`)
       .then((res) => res.json())
-      .then((body) => {
-        console.log(body);
-      })
+      .then((res) => setItems(parseItemsResponse(res)))
       .catch((err) => log(err, LOG_TYPE.error));
   }, []);
 
   return (
     <AppLayout>
       <Grid container spacing={2} justify="center">
-        {mock.map((item) => (
-          <Grid key={item} item>
-            <Item />
+        {items.map(({
+          id, title, description, price,
+        }) => (
+          <Grid key={id} item className={classes.item}>
+            <Item
+              title={title}
+              description={description}
+              price={price}
+            />
           </Grid>
         ))}
       </Grid>

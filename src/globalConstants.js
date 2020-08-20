@@ -1,2 +1,2 @@
 export const APP = 'cosychain';
-export const DAPP = '3N5hqYwpGFA1NRbt5gqcPG5inr54BiHS4Am';
+export const DAPP = '3NB3hWpTyhd81BjEEwBDtwoR7Z7AnjKo1KD';

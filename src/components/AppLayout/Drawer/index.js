@@ -13,6 +13,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import InfoIcon from '@material-ui/icons/Info';
 import DrawerMUI from '@material-ui/core/Drawer';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import AccessibleIcon from '@material-ui/icons/Accessible';
 import { useStyles } from 'components/AppLayout/Drawer/styles';
 
 export const Drawer = ({ open, handleDrawerClose }) => {
@@ -71,6 +72,17 @@ export const Drawer = ({ open, handleDrawerClose }) => {
               <InfoIcon />
             </ListItemIcon>
             <ListItemText primary="About" />
+          </ListItem>
+        </Link>
+      </List>
+      <Divider />
+      <List>
+        <Link to="/tests" className={classes.link}>
+          <ListItem button key="tests">
+            <ListItemIcon>
+              <AccessibleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Tests" />
           </ListItem>
         </Link>
       </List>

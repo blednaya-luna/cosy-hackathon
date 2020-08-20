@@ -3,30 +3,27 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { useStyles } from 'pages/Shop/Item/styles';
 
-export const Item = () => {
+export const Item = ({ title, description, price }) => {
   const classes = useStyles();
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image="https://picsum.photos/345/140"
-          title="Contemplative Reptile"
-        />
+      <CardActionArea disabled>
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            Some item title
+          <Typography gutterBottom variant="h5" component="h2" noWrap>
+            {title}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            Some random item description
+          <Typography variant="body2" color="textSecondary" component="p" noWrap>
+            {description}
+          </Typography>
+          <Typography variant="overline" color="primary" component="p">
+            {`${price} WAVES`}
           </Typography>
         </CardContent>
       </CardActionArea>

@@ -8,6 +8,7 @@ import { Home } from 'pages/Home';
 import { Shop } from 'pages/Shop';
 import { WishList } from 'pages/WishList';
 import { About } from 'pages/About';
+import { Tests } from 'pages/Tests';
 
 export const Router = () => (
   <BrowserRouter>
@@ -23,6 +24,9 @@ export const Router = () => (
       </Route>
       <Route path="/about">
         <About />
+      </Route>
+      <Route path="/tests">
+        <Tests />
       </Route>
     </Switch>
   </BrowserRouter>
