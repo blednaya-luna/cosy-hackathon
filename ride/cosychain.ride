@@ -2,7 +2,7 @@
 {-# CONTENT_TYPE DAPP #-}
 {-# SCRIPT_TYPE ACCOUNT #-}
 
-let OWNER = base58'13YevTfaVEoXJ5hu2kSjqnp2j2E8RV3NHHFM6giCFssY'
+let OWNER = base58'3N5hqYwpGFA1NRbt5gqcPG5inr54BiHS4Am'
 
 func getNumberByKey(key: String) = {
     let number = match this.getInteger(key) {
