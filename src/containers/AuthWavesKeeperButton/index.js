@@ -24,10 +24,7 @@ export const AuthWavesKeeperButton = () => {
     if (WavesKeeper) {
       WavesKeeper
         .auth({ data: APP })
-        .then((res) => {
-          setWavesKeeperIsAuthorized(Boolean(res.address));
-          log(res);
-        })
+        .then((res) => setWavesKeeperIsAuthorized(Boolean(res.address)))
         .catch((err) => log(err, LOG_TYPE.error));
     } else {
       log('Пожалуйста, установите WavesKeeper!', LOG_TYPE.error);

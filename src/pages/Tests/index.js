@@ -30,7 +30,6 @@ export const Tests = () => {
     const { WavesKeeper } = window;
     WavesKeeper
       .signAndPublishTransaction(txData)
-      .then((res) => log(res))
       .catch((error) => log(error, LOG_TYPE.error));
   };
 
