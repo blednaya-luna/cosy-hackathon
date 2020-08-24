@@ -10,7 +10,6 @@ import Badge from '@material-ui/core/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { AccountCircle } from '@material-ui/icons';
 import { ChangeThemeButton } from 'components/AppLayout/AppBar/ChangeThemeButton';
-import { AuthWavesKeeperButton } from 'containers/AuthWavesKeeperButton';
 import { useStyles } from 'components/AppLayout/AppBar/styles';
 
 export const AppBar = ({ open, handleDrawerOpen, IsAuthorized }) => {
@@ -53,7 +52,6 @@ export const AppBar = ({ open, handleDrawerOpen, IsAuthorized }) => {
             <AccountCircle />
           </IconButton>
         )}
-        <AuthWavesKeeperButton />
       </Toolbar>
     </AppBarMUI>
   );
