@@ -8,13 +8,15 @@ export const AuthWavesKeeperButton = () => {
 
   useEffect(() => {
     const { WavesKeeper } = window;
+
+    const checkIsAuthorized = async () => {
+      await WavesKeeper
+        .publicState()
+        .then((res) => setWavesKeeperIsAuthorized(Boolean(res.account.address)))
+        .catch((err) => log(err, LOG_TYPE.error));
+    };
+
     if (WavesKeeper) {
-      const checkIsAuthorized = async () => {
-        await WavesKeeper
-          .publicState()
-          .then((res) => setWavesKeeperIsAuthorized(Boolean(res.account.address)))
-          .catch((err) => log(err, LOG_TYPE.error));
-      };
       checkIsAuthorized();
     }
   }, []);

@@ -4,7 +4,6 @@ import { AppLayout } from 'components/AppLayout';
 import { Item } from 'pages/Shop/Item';
 import { DAPP } from 'globalConstants';
 import { log, LOG_TYPE } from 'utils/log';
-import { parseItemsResponse } from 'pages/Shop/utils/parseItemsResponse';
 import { useStyles } from 'pages/Shop/styles';
 
 export const Shop = () => {
@@ -15,7 +14,12 @@ export const Shop = () => {
   useEffect(() => {
     fetch(`https://testnet1.wavesnodes.com/addresses/data/${DAPP}`)
       .then((res) => res.json())
-      .then((res) => setItems(parseItemsResponse(res)))
+      .then((res) => {
+        const parsedItems = res
+          .filter((item) => item.key.includes('_data'))
+          .map((item) => JSON.parse(item.value));
+        setItems(parsedItems);
+      })
       .catch((err) => log(err, LOG_TYPE.error));
   }, []);
 
